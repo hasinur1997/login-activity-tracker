@@ -1,0 +1,15 @@
+{
+    "name": "hasinur/login-activity-tracker",
+    "autoload": {
+        "psr-4": {
+            "Hasinur\\LoginActivityTracker\\": "includes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hasinur Rahman",
+            "email": "hasinurrahman3@gmail.com"
+        }
+    ],
+    "require": {}
+}
