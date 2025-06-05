@@ -6,9 +6,9 @@ use WP_REST_Request;
 use WP_HTTP_Response;
 use WP_Error;
 use Hasinur\LoginActivityTracker\Api\Controllers\BaseController;
-use Hasinur\LoginActivityTracker\Models\Contact;
-use Hasinur\LoginActivityTracker\Resources\ContactResource;
-use Hasinur\LoginActivityTracker\Requests\StoreContactRequest;
+use Hasinur\LoginActivityTracker\Models\Log;
+use Hasinur\LoginActivityTracker\Resources\LogResource;
+
 
 /**
  * LogController
@@ -86,15 +86,15 @@ class LogController extends BaseController {
     public function get_item( $request ) {
         $id = intval( $request['id'] );
 
-        $contact = Contact::find( $id );
+        $log = Log::find( $id );
 
-        if ( ! $contact ) {
-            return new WP_Error( 'not_found', __( 'Contact not found.', 'phonebook' ), [ 'status' => 404 ] );
+        if ( ! $log ) {
+            return new WP_Error( 'not_found', __( 'log not found.', 'phonebook' ), [ 'status' => 404 ] );
         }
 
-        $contact = new ContactResource( $contact );
+        $log = new LogResource( $log );
 
-        return $this->response( $contact );
+        return $this->response( $log );
     }
 
     /**
@@ -123,17 +123,16 @@ class LogController extends BaseController {
         $sortOrder  = !empty($request['order']) ? sanitize_text_field($request['order']) : 'asc';
         $filter     = !empty($request['filter']) ? $request['filter'] : null;
 
-        $query = Contact::query();
+        $query = Log::query();
 
         if ( ! empty( $search ) ) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%")
-                    ->orWhere('address', 'like', "%{$search}%")
-                    ->orWhere('company', 'like', "%{$search}%")
-                    ->orWhere('job_title', 'like', "%{$search}%")
-                    ->orWhere('type', 'like', "%{$search}%");
+                $q->where('username', 'like', "%{$search}%")
+                    ->orWhere('login_status', 'like', "%{$search}%")
+                    ->orWhere('ip_address', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('device', 'like', "%{$search}%")
+                    ->orWhere('user_agent', 'like', "%{$search}%");
             });
         }
 
@@ -149,10 +148,10 @@ class LogController extends BaseController {
         $query->orderBy($sortBy, $sortOrder);
 
         // Paginate
-        $contacts = $query->paginate( $per_page, ['*'], 'page', $page );
+        $log = $query->paginate( $per_page, ['*'], 'page', $page );
 
         // Return
-        return rest_ensure_response( $contacts );
+        return rest_ensure_response( $log );
     }
 
     /**

@@ -1,9 +1,7 @@
 <?php
 namespace Hasinur\LoginActivityTracker\Services;
 
-// use Illuminate\Database\Capsule\Manager as Capsule;
-// use Illuminate\Events\Dispatcher;
-// use Illuminate\Container\Container;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * Database Service Class
@@ -30,21 +28,21 @@ class Database {
          *
          * @var Capsule
          */
-        // $capsule = new Capsule;
+        $capsule = new Capsule;
 
         // Set the event dispatcher used by Eloquent models (optional).
-        // $capsule->addConnection([
-        //     'driver'    => 'mysql',
-        //     'host'      => DB_HOST,
-        //     'database'  => DB_NAME,
-        //     'username'  => DB_USER,
-        //     'password'  => DB_PASSWORD,
-        //     'charset'   => 'utf8',
-        //     'collation' => 'utf8_unicode_ci',
-        //     'prefix'    => $wpdb->prefix,
-        // ]);
+        $capsule->addConnection([
+            'driver'    => 'mysql',
+            'host'      => DB_HOST,
+            'database'  => DB_NAME,
+            'username'  => DB_USER,
+            'password'  => DB_PASSWORD,
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => $wpdb->prefix,
+        ]);
 
-        // $capsule->setAsGlobal();
-        // $capsule->bootEloquent();
+        $capsule->setAsGlobal();
+        $capsule->bootEloquent();
     }
 }

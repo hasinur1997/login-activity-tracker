@@ -18,8 +18,6 @@ class AssetsProvider extends Provider {
      */
     protected $services = [
         AdminAssets::class,
-        FrontendAssets::class,
-        CommonAssets::class
     ];
 
     /**

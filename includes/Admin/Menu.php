@@ -73,14 +73,26 @@ class Menu implements HookableInterface {
      */
     public function __construct() {
 
-        $this->page_title      = __( 'Login Activity Tracker', 'login-activity-tracker' );
-        $this->menu_title      = __( 'Login Activity Tracker', 'login-activity-tracker' );
+        $this->page_title      = __( 'Login Activity', 'login-activity-tracker' );
+        $this->menu_title      = __( 'Login Activity', 'login-activity-tracker' );
         $this->base_capability = 'read';
         $this->capability      = 'manage_options';
         $this->menu_slug       = 'login-activity-tracker';
-        $this->icon            = 'dashicons-phone';
+        $this->icon            = 'dashicons-rest-api';
         $this->position        = 57;
-        $this->submenus        = [];
+        $this->submenus        = [
+            [
+                'title'      => __( 'Logs', 'login-activity-tracker' ),
+                'capability' => $this->base_capability,
+                'url'        => 'admin.php?page=' . $this->menu_slug . '#/',
+            ],
+            [
+                'title'      => __( 'Settings', 'login-activity-tracker' ),
+                'capability' => $this->base_capability,
+                'url'        => 'admin.php?page=' . $this->menu_slug . '#/settings',
+            ],
+            
+        ];
     }
 
     /**
@@ -112,18 +124,11 @@ class Menu implements HookableInterface {
             $this->position,
         );
 
-        // foreach ( $this->submenus as $item ) {
-        //     $submenu[ $this->menu_slug ][] = [ $item['title'], $item['capability'], $item['url'] ]; // phpcs:ignore
-        // }
+        
 
-        add_submenu_page(
-            'login-activity-tracker', 
-            'Settings', 
-            'Settings', 
-            'manage_options', 
-            'lat-settings', 
-            [$this, 'lat_render_settings_page']
-        );
+        foreach ( $this->submenus as $item ) {
+            $submenu[ $this->menu_slug ][] = [ $item['title'], $item['capability'], $item['url'] ]; // phpcs:ignore
+        }
     }
 
     /**
@@ -134,81 +139,7 @@ class Menu implements HookableInterface {
      * @return void
      */
     public function render_menu_page(): void {
-        global $wpdb;
-        $table = $wpdb->prefix . 'login_activity';
-
-        $search_user = $_GET['username'] ?? '';
-        $search_status = $_GET['status'] ?? '';
-        $page = max(1, intval($_GET['paged'] ?? 1));
-        $per_page = 20;
-        $offset = ($page - 1) * $per_page;
-
-        $where = 'WHERE 1=1';
-        if ($search_user) {
-            $where .= $wpdb->prepare(" AND username LIKE %s", "%$search_user%");
-        }
-        if ($search_status) {
-            $where .= $wpdb->prepare(" AND login_status = %s", $search_status);
-        }
-
-        $total = $wpdb->get_var("SELECT COUNT(*) FROM $table $where");
-        $logs = $wpdb->get_results("SELECT * FROM $table $where ORDER BY created_at DESC LIMIT $per_page OFFSET $offset");
-        $total_pages = ceil($total / $per_page);
-
-        echo '<div class="wrap">
-            <h1>Login Activity Logs</h1>
-            <form method="get" style="margin-bottom: 20px;">
-                <input type="hidden" name="page" value="login-activity-tracker">
-                <input type="text" name="username" placeholder="Username" value="' . esc_attr($search_user) . '" />
-                <select name="status">
-                    <option value="">All Statuses</option>
-                    <option value="Success"' . selected($search_status, 'Success', false) . '>Success</option>
-                    <option value="Failed"' . selected($search_status, 'Failed', false) . '>Failed</option>
-                </select>
-                <button class="button">Filter</button>
-            </form>
-
-            <table class="widefat fixed striped">
-                <thead><tr>
-                    <th>Username</th>
-                    <th>Status</th>
-                    <th>IP</th>
-                    <th>Location</th>
-                    <th>Device</th>
-                    <th>User Agent</th>
-                    <th>Time</th>
-                </tr></thead>
-                <tbody>';
-
-        if ($logs) {
-            foreach ($logs as $log) {
-                echo '<tr>
-                    <td>' . esc_html($log->username) . '</td>
-                    <td>' . esc_html($log->login_status) . '</td>
-                    <td>' . esc_html($log->ip_address) . '</td>
-                    <td>' . esc_html($log->location) . '</td>
-                    <td>' . esc_html($log->device) . '</td>
-                    <td>' . esc_html($log->user_agent) . '</td>
-                    <td>' . esc_html($log->created_at) . '</td>
-                </tr>';
-            }
-        } else {
-            echo '<tr><td colspan="7">No records found.</td></tr>';
-        }
-
-        echo '</tbody></table>';
-
-        if ($total_pages > 1) {
-            echo '<div class="tablenav"><div class="tablenav-pages">';
-            for ($i = 1; $i <= $total_pages; $i++) {
-                $class = ($i === $page) ? ' class="current"' : '';
-                $url = add_query_arg(['paged' => $i]);
-                echo "<a href='" . esc_url($url) . "'$class>$i</a> ";
-            }
-            echo '</div></div>';
-        }
-
-        echo '</div>';
+        echo '<div id="login-activity-tracker"></div>';
     }
 
     /**

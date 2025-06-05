@@ -22,7 +22,11 @@ class AdminAssets extends BaseAssets {
      * @return  void
      */
     public function enqueue_scripts_styles() {
-        wp_enqueue_script( 'phonebook-admin-scripts' );
+        $result = wp_enqueue_script( 'loginActivityTracker-admin-scripts' );
+
+        error_log(print_r([
+            'result' => $result,
+        ], true));
     }
 
     /**

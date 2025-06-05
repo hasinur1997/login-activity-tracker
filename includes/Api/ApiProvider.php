@@ -1,7 +1,6 @@
 <?php
 namespace Hasinur\LoginActivityTracker\Api;
-
-use Hasinur\LoginActivityTracker\Api\Controllers\ContactController;
+use Hasinur\LoginActivityTracker\Api\Controllers\LogController;
 use Hasinur\LoginActivityTracker\Core\Abstracts\Provider;
 
 /**
@@ -19,7 +18,7 @@ class ApiProvider extends Provider {
      * @var array $services
      */
     protected $services = [
-        ContactController::class,
+        LogController::class,
     ];
     
     /**

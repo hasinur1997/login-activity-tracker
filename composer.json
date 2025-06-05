@@ -11,5 +11,9 @@
             "email": "hasinurrahman3@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "as247/wp-eloquent": "^2.1",
+        "illuminate/database": "^12.17",
+        "illuminate/pagination": "^12.17"
+    }
 }

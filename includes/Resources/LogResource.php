@@ -1,10 +1,10 @@
 <?php
 namespace Hasinur\LoginActivityTracker\Resources;
 /**
- * Class ContactResource
+ * Class LogResource
  * Represents a contact resource for API responses.
  */
-class ContactResource extends Resource {
+class LogResource extends Resource {
     /**
      * Transform the contact data into an array.
      *
