@@ -121,7 +121,7 @@ class LogController extends BaseController {
         $search     = !empty($request['search']) ? sanitize_text_field($request['search']) : '';
         $sortBy     = !empty($request['orderby']) ? sanitize_text_field($request['orderby']) : 'id';
         $sortOrder  = !empty($request['order']) ? sanitize_text_field($request['order']) : 'asc';
-        $filter     = !empty($request['filter']) ? $request['filter'] : null;
+        $filter     = !empty($request['filter']) ? $request['filter'] : '';
 
         $query = Log::query();
 
@@ -136,9 +136,18 @@ class LogController extends BaseController {
             });
         }
 
+        error_log(print_r([
+            'per_page' => $per_page,
+            'page'     => $page,
+            'search'   => $search,
+            'sortBy'   => $sortBy,
+            'sortOrder'=> $sortOrder,
+            'filter'   => $filter
+        ], true));
+
         // Filter
-        if ( ! empty( $filter ) && is_string( $filter ) ) {
-            $query->where( 'type', $filter );
+        if ( $filter ) {
+            $query->where( 'login_status', $filter );
         }
 
         // Sort

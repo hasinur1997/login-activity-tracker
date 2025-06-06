@@ -20,11 +20,11 @@ const LogTable = ({ data, loading, pagination, onChange }) => {
         </Tag>
       ),
     },
-    { title: 'IP', dataIndex: 'ip', sorter: true },
+    { title: 'IP', dataIndex: 'ip_address', sorter: true },
     { title: 'Location', dataIndex: 'location' },
     { title: 'Device', dataIndex: 'device' },
     { title: 'User Agent', dataIndex: 'user_agent' },
-    { title: 'Time', dataIndex: 'time', sorter: true },
+    { title: 'Time', dataIndex: 'created_at', sorter: true },
   ];
 
   return (

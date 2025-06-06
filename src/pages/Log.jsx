@@ -16,7 +16,7 @@ const Log = () => {
 
     return (
         <div>
-            <h2>Log Page</h2>
+            <h2>Login Activity Logs</h2>
             <Filters
                 searchText={searchText}
                 setSearchText={setSearchText}

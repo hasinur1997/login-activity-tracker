@@ -17,8 +17,9 @@ const Filters = ({ searchText, setSearchText, statusFilter, setStatusFilter }) =
         value={statusFilter}
         placeholder="Filter by status"
         onChange={(value) => setStatusFilter(value)}
-        allowClear
+        style={{ width: 200 }}
       >
+        <Option value="">Select</Option>
         <Option value="success">Success</Option>
         <Option value="failed">Failed</Option>
       </Select>

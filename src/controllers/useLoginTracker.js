@@ -1,16 +1,17 @@
 import { useState, useEffect } from "@wordpress/element";
-import apiFetch from "@wordpress/api-fetch";
+import logApi from "../api/logApi";
 
 const useLoginTracker = () => {
     const [data, setData] = useState([]);
     const [pagination, setPagination] = useState({
-        total: 0,
-        perPage: 10,
-        currentPage: 1,
+        current: 1,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ['1', '2', '5', '10', '20', '50'],
     });
     const [loading, setLoading] = useState(true);
-    const [searchText, setSearchText] = useState("");
-    const [statusFilter, setStatusFilter] = useState(null);
+    const [searchText, setSearchText] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
     const [sorter, setSorter] = useState({ field: null, order: null });
 
 
@@ -18,14 +19,22 @@ const useLoginTracker = () => {
         setLoading(true);
         
         try {
-            const response = await apiFetch({ 'path': '/login-activity/v1/logs'});
+            const response = await logApi.all({ 
+                page,
+                per_page: pagination.pageSize,
+                search: searchText,
+                status: statusFilter,
+                orderby: sorter.field,
+                order: sorter.order,
+                filter: statusFilter
+            });
 
             setData(response.data || []);
             setPagination((prev) => ({
                 ...prev,
                 total: response.total,
             }));
-
+            console.log(response);
         }catch (error) {
             console.error("Error fetching data:", error);
         }finally {
@@ -42,7 +51,7 @@ const useLoginTracker = () => {
             ...pagination,
             currentPage: pagination.current,
         });
-        setStatusFilter(filters.status || null);
+        setStatusFilter(filters.status || "");
         setSearchText(filters.search || "");
         setSorter({
             field: sorter.field,
